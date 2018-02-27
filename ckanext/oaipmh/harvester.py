@@ -123,6 +123,10 @@ class OaipmhHarvester(HarvesterBase):
 
     def _set_config(self, source_config):
         try:
+            # Set config to empty JSON object
+            if not source_config:
+                source_config = '{}'
+
             config_json = json.loads(source_config)
             log.debug('config_json: %s' % config_json)
             try:
