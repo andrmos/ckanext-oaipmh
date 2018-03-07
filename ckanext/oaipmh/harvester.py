@@ -131,7 +131,7 @@ class OaipmhHarvester(HarvesterBase):
                 source_config = '{}'
 
             config_json = json.loads(source_config)
-            log.debug('config_json: %s' % config_json)
+            #  log.debug('config_json: %s' % config_json)
             try:
                 username = config_json['username']
                 password = config_json['password']
@@ -162,7 +162,8 @@ class OaipmhHarvester(HarvesterBase):
         :param harvest_object: HarvestObject object
         :returns: True if everything went right, False if errors were found
         '''
-        log.debug("in fetch stage: %s" % harvest_object.guid)
+        #  log.debug("in fetch stage: %s" % harvest_object.guid)
+
         try:
             self._set_config(harvest_object.job.source.config)
             registry = self._create_metadata_registry()
@@ -174,26 +175,28 @@ class OaipmhHarvester(HarvesterBase):
             )
             record = None
             try:
-                log.debug(
-                    "Load %s with metadata prefix '%s'" %
-                    (harvest_object.guid, self.md_format)
-                )
+                #  log.debug(
+                    #  "Load %s with metadata prefix '%s'" %
+                    #  (harvest_object.guid, self.md_format)
+                #  )
 
                 self._before_record_fetch(harvest_object)
+
                 record = client.getRecord(
                     identifier=harvest_object.guid,
                     metadataPrefix=self.md_format
                 )
                 self._after_record_fetch(record)
-                log.debug('record found!')
+
+                #  log.debug('record found!')
             except:
                 log.exception('getRecord failed')
                 self._save_object_error('Get record failed!', harvest_object)
                 return False
 
             header, metadata, _ = record
-            log.debug('metadata %s' % metadata)
-            log.debug('header %s' % header)
+            #  log.debug('metadata %s' % metadata)
+            #  log.debug('header %s' % header)
 
             try:
                 metadata_modified = header.datestamp().isoformat()
@@ -201,11 +204,12 @@ class OaipmhHarvester(HarvesterBase):
                 metadata_modified = None
 
             try:
+                # TODO: This fails for some resources
                 content_dict = metadata.getMap()
                 content_dict['set_spec'] = header.setSpec()
                 if metadata_modified:
                     content_dict['metadata_modified'] = metadata_modified
-                log.debug(content_dict)
+                #  log.debug(content_dict)
                 content = json.dumps(content_dict)
             except:
                 log.exception('Dumping the metadata failed!')
@@ -251,7 +255,7 @@ class OaipmhHarvester(HarvesterBase):
         :returns: True if everything went right, False if errors were found
         '''
 
-        log.debug("in import stage: %s" % harvest_object.guid)
+        #  log.debug("in import stage: %s" % harvest_object.guid)
         if not harvest_object:
             log.error('No harvest object received')
             self._save_object_error('No harvest object received')
@@ -315,7 +319,7 @@ class OaipmhHarvester(HarvesterBase):
 
             # create group based on set
             if content['set_spec']:
-                log.debug('set_spec: %s' % content['set_spec'])
+                #  log.debug('set_spec: %s' % content['set_spec'])
                 groups.extend(
                     self._find_or_create_groups(
                         content['set_spec'],
@@ -336,7 +340,8 @@ class OaipmhHarvester(HarvesterBase):
                 package_dict
             )
 
-            log.debug('Create/update package using dict: %s' % package_dict)
+
+            # log.debug('Create/update package using dict: %s' % package_dict)
             self._create_or_update_package(
                 package_dict,
                 harvest_object
@@ -344,7 +349,7 @@ class OaipmhHarvester(HarvesterBase):
 
             Session.commit()
 
-            log.debug("Finished record")
+            #  log.debug("Finished record")
         except:
             log.exception('Something went wrong!')
             self._save_object_error(
@@ -403,7 +408,7 @@ class OaipmhHarvester(HarvesterBase):
 
     def _extract_resources(self, url, content):
         resources = []
-        log.debug('URL of ressource: %s' % url)
+        #  log.debug('URL of ressource: %s' % url)
         if url:
             try:
                 resource_format = content['format'][0]
@@ -431,7 +436,7 @@ class OaipmhHarvester(HarvesterBase):
         return package_dict
 
     def _find_or_create_groups(self, groups, context):
-        log.debug('Group names: %s' % groups)
+        #  log.debug('Group names: %s' % groups)
         group_ids = []
         for group_name in groups:
             data_dict = {
@@ -441,11 +446,11 @@ class OaipmhHarvester(HarvesterBase):
             }
             try:
                 group = get_action('group_show')(context, data_dict)
-                log.info('found the group ' + group['id'])
+                #  log.info('found the group ' + group['id'])
             except:
                 group = get_action('group_create')(context, data_dict)
                 log.info('created the group ' + group['id'])
             group_ids.append(group['id'])
 
-        log.debug('Group ids: %s' % group_ids)
+        #  log.debug('Group ids: %s' % group_ids)
         return group_ids
