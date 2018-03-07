@@ -262,12 +262,12 @@ class OaipmhHarvester(HarvesterBase):
             context = {
                 'model': model,
                 'session': Session,
-                'user': self.user
+                'user': self.user,
+                'ignore_auth': True  # TODO: Remove, just to test
             }
 
             package_dict = {}
             content = json.loads(harvest_object.content)
-            log.debug(content)
 
             package_dict['id'] = munge_title_to_name(harvest_object.guid)
             package_dict['name'] = package_dict['id']
@@ -276,7 +276,13 @@ class OaipmhHarvester(HarvesterBase):
 
             for ckan_field, oai_field in mapping.iteritems():
                 try:
-                    package_dict[ckan_field] = content[oai_field][0]
+                    if ckan_field == 'maintainer_email' and '@' not in content[oai_field][0]:
+                        # Email not available.
+                        # Do not set email field as it will break validation.
+                        continue
+                    else:
+                        package_dict[ckan_field] = content[oai_field][0]
+
                 except (IndexError, KeyError):
                     continue
 
