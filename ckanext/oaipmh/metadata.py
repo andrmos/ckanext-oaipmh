@@ -49,3 +49,30 @@ oai_dc_reader = MetadataReader(
     'oai': 'http://www.openarchives.org/OAI/2.0/',
     'dc': 'http://purl.org/dc/elements/1.1/'}
 )
+
+
+xpath_prefix = "//*[name()='metadata']/*[name()='DIF']"
+dif_reader = MetadataReader(
+    fields={
+        'title':            ('textList', xpath_prefix + "/*[name()='Entry_Title']/text()"), # noqa
+        'creator':          ('textList', xpath_prefix + "/*[name()='Data_Set_Citation']/*[name()='Dataset_Creator']/text()"), # noqa
+        'subject':          ('textList', xpath_prefix + "/*[name()='Keyword']/text()"), # noqa
+        'description':      ('textList', xpath_prefix + "/*[name()='Summary']/*[name()='Abstract']/text()"), # noqa
+        'publisher':        ('textList', xpath_prefix + "/*[name()='Data_Set_Citation']/*[name()='Dataset_Publisher']/text()"), # noqa
+        'maintainer_email': ('textList', xpath_prefix + "/*[name()='Personnel']/*[name()='Email']/text()"), # noqa
+        'contributor':      ('textList', xpath_prefix + "/*[name()='Personnel']/*[name()='Last_Name']/text()"), # noqa TODO
+        'date':             ('textList', xpath_prefix + "/*[name()='Data_Set_Citation']/*[name()='Dataset_Release_Date']/text()"), # noqa
+        #  'type':             ('textList', ""), # noqa TODO
+        #  'format':           ('textList', ""), # noqa TODO
+        'identifier':       ('textList', xpath_prefix + "/*[name()='Entry_ID']/text()"), # noqa TODO
+        'source':           ('textList', xpath_prefix + "/*[name()='Related_URL']/*[name()='URL']/text()"), # noqa
+        'language':         ('textList', xpath_prefix + "/*[name()='Data_Set_Language']/text()"), # noqa
+        #  'relation':         ('textList', ""), # noqa TODO
+        'coverage':         ('textList', xpath_prefix + "/*[name()='Location']/*[name()='Location_Type']/text()"), # noqa TODO
+        'rights':           ('textList', xpath_prefix + "/*[name()='Access_Constraints']/text()"), # noqa
+    },
+    namespaces={
+        # TODO: Not used...
+        'dif': 'https://gcmd.nasa.gov/Aboutus/xml/dif/'
+    }
+)

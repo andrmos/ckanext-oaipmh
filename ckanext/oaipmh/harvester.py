@@ -16,6 +16,8 @@ from oaipmh.metadata import MetadataRegistry
 
 from metadata import oai_ddi_reader
 from metadata import oai_dc_reader
+from metadata import dif_reader
+from pprint import pprint
 
 log = logging.getLogger(__name__)
 
@@ -119,6 +121,7 @@ class OaipmhHarvester(HarvesterBase):
         registry = MetadataRegistry()
         registry.registerReader('oai_dc', oai_dc_reader)
         registry.registerReader('oai_ddi', oai_ddi_reader)
+        registry.registerReader('dif', dif_reader)
         return registry
 
     def _set_config(self, source_config):
