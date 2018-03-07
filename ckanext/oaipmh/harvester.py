@@ -141,7 +141,8 @@ class OaipmhHarvester(HarvesterBase):
 
             self.user = 'harvest'
             self.set_spec = config_json.get('set', None)
-            self.md_format = config_json.get('metadata_prefix', 'oai_dc')
+            self.md_format = config_json.get('metadata_prefix', 'dif')
+            # TODO: Change default back to 'oai_dc'
             self.force_http_get = config_json.get('force_http_get', False)
 
         except ValueError:
