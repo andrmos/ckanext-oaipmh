@@ -63,8 +63,9 @@ dif_reader = MetadataReader(
         'contributor':      ('textList', xpath_prefix + "/*[name()='Personnel']/*[name()='Last_Name']/text()"), # noqa TODO
         'date':             ('textList', xpath_prefix + "/*[name()='Data_Set_Citation']/*[name()='Dataset_Release_Date']/text()"), # noqa
         #  'type':             ('textList', ""), # noqa TODO
-        #  'format':           ('textList', ""), # noqa TODO
-        'identifier':       ('textList', xpath_prefix + "/*[name()='Entry_ID']/text()"), # noqa TODO
+        'format':           ('textList', xpath_prefix + "/*[name()='Related_URL']/*[name()='URL_Content_Type']/*[name()='Subtype']/text()"), # noqa TODO
+        # Identifier is actually resource url...
+        'identifier':       ('textList', xpath_prefix + "/*[name()='Related_URL']/*[name()='URL']/text()"), # noqa TODO
         'source':           ('textList', xpath_prefix + "/*[name()='Related_URL']/*[name()='URL']/text()"), # noqa
         'language':         ('textList', xpath_prefix + "/*[name()='Data_Set_Language']/text()"), # noqa
         #  'relation':         ('textList', ""), # noqa TODO
