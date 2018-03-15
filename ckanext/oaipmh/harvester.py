@@ -306,11 +306,17 @@ class OaipmhHarvester(HarvesterBase):
             package_dict['owner_org'] = owner_org
 
             # add license
-            package_dict['license_id'] = self._extract_license_id(content)
+            # TODO: Need to map to CKAN author field
+            if self.md_format != 'dif':
+                package_dict['license_id'] = self._extract_license_id(content)
+
+            # TODO: Need to map to CKAN author field
+            #  formats = self._extract_formats(content)
+            # TODO: package_dict['formats'] = formats
 
             # add resources
-            url = self._get_possible_resource(harvest_object, content)
-            package_dict['resources'] = self._extract_resources(url, content)
+            #  url = self._get_possible_resource(harvest_object, content)
+            #  package_dict['resources'] = self._extract_resources(url, content)
 
             # extract tags from 'type' and 'subject' field
             # everything else is added as extra field
@@ -373,10 +379,21 @@ class OaipmhHarvester(HarvesterBase):
         }
 
     def _extract_author(self, content):
-        return ', '.join(content['creator'])
+        if self.md_format == 'dif':
+            dataset_creator = content['Data_Set_Citation/Dataset_Creator']
+            dataset_publisher = content['Data_Set_Citation/Dataset_Publisher']
+            if 'Not available' in dataset_creator:
+                return dataset_creator
+            else:
+                return dataset_publisher
+        else:
+            return ', '.join(content['creator'])
 
     def _extract_license_id(self, content):
-        return ', '.join(content['rights'])
+        # TODO: Fix
+        #  if content['Access_Constraints'] and content['Use_Constraints']
+        #  return content['Access_Constraints'] or content['Use_Constraints'] or content['rights'] or 'Not available'
+        return content['rights']
 
     def _extract_tags_and_extras(self, content):
         extras = []
