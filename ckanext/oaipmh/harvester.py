@@ -400,6 +400,19 @@ class OaipmhHarvester(HarvesterBase):
 
         return (tags, extras)
 
+    # TODO: Finish implementing
+    def _extract_formats(self, content):
+        formats = []
+        for format in content['format']:
+            if 'wms' in format.lower():
+                formats.append('wms')
+            elif 'dods' in format.lower():
+                formats.append('opendap')
+        # TODO: wcs, netcdfsubset, 'fou-hi'?
+        pass
+
+    # TODO: Implement support for several resources per dataset.
+    #       Or future work?
     def _get_possible_resource(self, harvest_obj, content):
         url = None
         candidates = content['identifier']
@@ -412,12 +425,15 @@ class OaipmhHarvester(HarvesterBase):
 
     def _extract_resources(self, url, content):
         resources = []
-        #  log.debug('URL of ressource: %s' % url)
         if url:
             try:
+                # TODO: Use _extract_formats to get format
                 resource_format = content['format'][0]
             except (IndexError, KeyError):
-                resource_format = 'HTML'
+                if 'thredds' in url:
+                    resource_format = 'thredds'
+                else:
+                    resource_format = 'HTML'
             resources.append({
                 'name': content['title'][0],
                 'resource_type': resource_format,
