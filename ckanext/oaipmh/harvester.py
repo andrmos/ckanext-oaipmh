@@ -294,6 +294,7 @@ class OaipmhHarvester(HarvesterBase):
                     continue
 
             # add author
+            # TODO: Remove Dataset_Creator and/or Dataset_Publisher as it is redundant information
             package_dict['author'] = self._extract_author(content)
 
             # add owner_org
