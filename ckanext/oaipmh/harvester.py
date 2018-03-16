@@ -313,8 +313,9 @@ class OaipmhHarvester(HarvesterBase):
             package_dict['formats'] = formats
 
             # add resources
-            #  url = self._get_possible_resource(harvest_object, content)
-            #  package_dict['resources'] = self._extract_resources(url, content)
+            # TODO: Make list
+            url = self._get_possible_resource(harvest_object, content)
+            package_dict['resources'] = self._extract_resources(url, content)
 
             # extract tags from 'type' and 'subject' field
             # everything else is added as extra field
@@ -434,11 +435,15 @@ class OaipmhHarvester(HarvesterBase):
             for url in urls:
                 if 'wms' in url.lower():
                     formats.append('wms')
-                if 'dods' in url.lower():
+                elif 'dods' in url.lower():
                     formats.append('opendap')
-                if 'catalog' in url.lower():
+                elif 'catalog' in url.lower():
                     # thredds catalog
                     formats.append('thredds')
+                else:
+                    formats.append('HTML')
+                # TODO: Default is html
+
             # TODO: wcs, netcdfsubset, 'fou-hi'?
             return formats
         else:
