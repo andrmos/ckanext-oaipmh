@@ -309,8 +309,8 @@ class OaipmhHarvester(HarvesterBase):
             package_dict['license_id'] = self._extract_license_id(content)
 
             # TODO: Need to map to CKAN author field
-            #  formats = self._extract_formats(content)
-            # TODO: package_dict['formats'] = formats
+            formats = self._extract_formats(content)
+            package_dict['formats'] = formats
 
             # add resources
             #  url = self._get_possible_resource(harvest_object, content)
@@ -427,16 +427,19 @@ class OaipmhHarvester(HarvesterBase):
 
         return (tags, extras)
 
-    # TODO: Finish implementing
     def _extract_formats(self, content):
         formats = []
-        for format in content['format']:
-            if 'wms' in format.lower():
+        urls = content['Related_URL/URL']
+        for url in urls:
+            if 'wms' in url.lower():
                 formats.append('wms')
-            elif 'dods' in format.lower():
+            if 'dods' in url.lower():
                 formats.append('opendap')
+            if 'catalog' in url.lower():
+                # thredds catalog
+                formats.append('thredds')
         # TODO: wcs, netcdfsubset, 'fou-hi'?
-        pass
+        return formats
 
     # TODO: Implement support for several resources per dataset.
     #       Or future work?
