@@ -452,33 +452,61 @@ class OaipmhHarvester(HarvesterBase):
     # TODO: Implement support for several resources per dataset.
     #       Or future work?
     def _get_possible_resource(self, harvest_obj, content):
-        url = None
-        candidates = content['identifier']
-        candidates.append(harvest_obj.guid)
-        for ident in candidates:
-            if ident.startswith('http://') or ident.startswith('https://'):
-                url = ident
-                break
-        return url
+        if self.md_format == 'dif':
+            urls = content['Related_URL/URL']
+            if urls:
+                return urls
+        else:
+            url = []
+            candidates = content['identifier']
+            candidates.append(harvest_obj.guid)
+            for ident in candidates:
+                if ident.startswith('http://') or ident.startswith('https://'):
+                    url.append(ident)
+                    break
+            return url
 
-    def _extract_resources(self, url, content):
-        resources = []
-        if url:
-            try:
-                # TODO: Use _extract_formats to get format
-                resource_format = content['format'][0]
-            except (IndexError, KeyError):
-                if 'thredds' in url:
-                    resource_format = 'thredds'
-                else:
-                    resource_format = 'HTML'
-            resources.append({
-                'name': content['title'][0],
-                'resource_type': resource_format,
-                'format': resource_format,
-                'url': url
-            })
-        return resources
+    def _extract_resources(self, urls, content):
+        if self.md_format == 'dif':
+            print('urls: ', urls)
+            resources = []
+            if urls:
+                try:
+                    resource_formats = self._extract_formats(content)
+                    print('resource_formats: ', resource_formats)
+                except (IndexError, KeyError):
+                    print('IndexError: ', IndexError)
+                    print('KeyError: ', KeyError)
+
+                for index, url in enumerate(urls):
+                    print('url: ', url)
+                    resources.append({
+                        'name': content['Related_URL/Description'][index],
+                        'resource_type': resource_formats[index],
+                        'format': resource_formats[index],
+                        'url': url
+                    })
+            return resources
+        else:
+            resources = []
+            url = urls[0]
+            if url:
+                try:
+                    # TODO: Use _extract_formats to get format
+                    resource_format = content['format'][0]
+                except (IndexError, KeyError):
+                    # TODO: Remove. This is only needed for DIF
+                    if 'thredds' in url:
+                        resource_format = 'thredds'
+                    else:
+                        resource_format = 'HTML'
+                resources.append({
+                    'name': content['title'][0],
+                    'resource_type': resource_format,
+                    'format': resource_format,
+                    'url': url
+                })
+            return resources
 
     def _extract_groups(self, content, context):
         if 'series' in content and len(content['series']) > 0:
