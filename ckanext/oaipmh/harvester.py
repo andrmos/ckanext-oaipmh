@@ -381,6 +381,7 @@ class OaipmhHarvester(HarvesterBase):
     def _extract_author(self, content):
         if self.md_format == 'dif':
             dataset_creator = content['Data_Set_Citation/Dataset_Creator']
+            # TODO: Remove publisher? Is not part of mapping...
             dataset_publisher = content['Data_Set_Citation/Dataset_Publisher']
             if 'not available' not in dataset_creator.lower():
                 return dataset_creator
