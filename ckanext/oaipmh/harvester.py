@@ -428,18 +428,21 @@ class OaipmhHarvester(HarvesterBase):
         return (tags, extras)
 
     def _extract_formats(self, content):
-        formats = []
-        urls = content['Related_URL/URL']
-        for url in urls:
-            if 'wms' in url.lower():
-                formats.append('wms')
-            if 'dods' in url.lower():
-                formats.append('opendap')
-            if 'catalog' in url.lower():
-                # thredds catalog
-                formats.append('thredds')
-        # TODO: wcs, netcdfsubset, 'fou-hi'?
-        return formats
+        if self.md_format == 'dif':
+            formats = []
+            urls = content['Related_URL/URL']
+            for url in urls:
+                if 'wms' in url.lower():
+                    formats.append('wms')
+                if 'dods' in url.lower():
+                    formats.append('opendap')
+                if 'catalog' in url.lower():
+                    # thredds catalog
+                    formats.append('thredds')
+            # TODO: wcs, netcdfsubset, 'fou-hi'?
+            return formats
+        else:
+            return content['format']
 
     # TODO: Implement support for several resources per dataset.
     #       Or future work?
