@@ -306,9 +306,7 @@ class OaipmhHarvester(HarvesterBase):
             package_dict['owner_org'] = owner_org
 
             # add license
-            # TODO: Need to map to CKAN author field
-            if self.md_format != 'dif':
-                package_dict['license_id'] = self._extract_license_id(content)
+            package_dict['license_id'] = self._extract_license_id(content)
 
             # TODO: Need to map to CKAN author field
             #  formats = self._extract_formats(content)
@@ -380,9 +378,9 @@ class OaipmhHarvester(HarvesterBase):
 
     def _extract_author(self, content):
         if self.md_format == 'dif':
-            dataset_creator = content['Data_Set_Citation/Dataset_Creator']
+            dataset_creator = ', '.join(content['Data_Set_Citation/Dataset_Creator'])
             # TODO: Remove publisher? Is not part of mapping...
-            dataset_publisher = content['Data_Set_Citation/Dataset_Publisher']
+            dataset_publisher = ', '.join(content['Data_Set_Citation/Dataset_Publisher'])
             if 'not available' not in dataset_creator.lower():
                 return dataset_creator
             elif 'not available' not in dataset_publisher.lower():
@@ -393,10 +391,19 @@ class OaipmhHarvester(HarvesterBase):
             return ', '.join(content['creator'])
 
     def _extract_license_id(self, content):
-        # TODO: Fix
-        #  if content['Access_Constraints'] and content['Use_Constraints']
-        #  return content['Access_Constraints'] or content['Use_Constraints'] or content['rights'] or 'Not available'
-        return content['rights']
+        if self.md_format == 'dif':
+            use_constraints = ', '.join(content['Use_Constraints'])
+            access_constraints = ', '.join(content['Access_Constraints'])
+            # TODO: Generalize in own function to check for both
+            #       'Not available' and None value
+            if 'not available' not in use_constraints.lower() and 'not available' not in access_constraints.lower():
+                return '{0}, {1}'.format(use_constraints, access_constraints)
+            elif 'not available' not in use_constraints.lower():
+                return use_constraints
+            elif 'not available' not in access_constraints.lower():
+                return access_constraints
+        else:
+            return content['rights']
 
     def _extract_tags_and_extras(self, content):
         extras = []
