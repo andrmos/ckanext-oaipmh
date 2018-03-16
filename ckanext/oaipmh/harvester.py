@@ -382,10 +382,12 @@ class OaipmhHarvester(HarvesterBase):
         if self.md_format == 'dif':
             dataset_creator = content['Data_Set_Citation/Dataset_Creator']
             dataset_publisher = content['Data_Set_Citation/Dataset_Publisher']
-            if 'Not available' in dataset_creator:
+            if 'not available' in dataset_creator.lower():
                 return dataset_creator
-            else:
+            elif 'not available' in dataset_publisher.lower():
                 return dataset_publisher
+            else:
+                return 'Not available'
         else:
             return ', '.join(content['creator'])
 
