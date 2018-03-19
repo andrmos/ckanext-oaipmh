@@ -369,13 +369,33 @@ class OaipmhHarvester(HarvesterBase):
         return True
 
     def _get_mapping(self):
-        return {
-            'title': 'title',
-            'notes': 'description',
-            'maintainer': 'publisher',
-            'maintainer_email': 'maintainer_email',
-            'url': 'source',
-        }
+        if self.md_format == 'dif':
+            # CKAN fields explained here:
+            # http://docs.ckan.org/en/ckan-1.7.4/domain-model-dataset.html
+            # https://github.com/ckan/ckan/blob/master/ckan/logic/schema.py
+            # TODO: Are there more fields to add?
+            return {
+                'title': 'Entry_Title',
+                'notes': 'Summary/Abstract',
+                #  'name': '',
+                # Thredds catalog?
+                #  'url': '',
+                #  'author_email': '',
+                #  'maintainer': '',
+                'maintainer_email': 'Personnel/Email',
+                # Dataset version
+                #  'version': '',
+                #  'groups': '',
+                #  'type': '',
+            }
+        else:
+            return {
+                'title': 'title',
+                'notes': 'description',
+                'maintainer': 'publisher',
+                'maintainer_email': 'maintainer_email',
+                'url': 'source',
+            }
 
     def _extract_author(self, content):
         if self.md_format == 'dif':
@@ -449,8 +469,6 @@ class OaipmhHarvester(HarvesterBase):
         else:
             return content['format']
 
-    # TODO: Implement support for several resources per dataset.
-    #       Or future work?
     def _get_possible_resource(self, harvest_obj, content):
         if self.md_format == 'dif':
             urls = content['Related_URL/URL']
@@ -514,6 +532,7 @@ class OaipmhHarvester(HarvesterBase):
             )
         return []
 
+    # TODO: Move custom DIF handling to this function
     def _extract_additional_fields(self, content, package_dict):
         # This method is the ideal place for sub-classes to
         # change whatever they want in the package_dict
