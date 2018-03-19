@@ -469,18 +469,15 @@ class OaipmhHarvester(HarvesterBase):
     # TODO: Refactor
     def _extract_resources(self, urls, content):
         if self.md_format == 'dif':
-            print('urls: ', urls)
             resources = []
             if urls:
                 try:
                     resource_formats = self._extract_formats(content)
-                    print('resource_formats: ', resource_formats)
                 except (IndexError, KeyError):
                     print('IndexError: ', IndexError)
                     print('KeyError: ', KeyError)
 
                 for index, url in enumerate(urls):
-                    print('url: ', url)
                     resources.append({
                         'name': content['Related_URL/Description'][index],
                         'resource_type': resource_formats[index],
