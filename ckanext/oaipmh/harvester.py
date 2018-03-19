@@ -466,6 +466,7 @@ class OaipmhHarvester(HarvesterBase):
                     break
             return url
 
+    # TODO: Refactor
     def _extract_resources(self, urls, content):
         if self.md_format == 'dif':
             print('urls: ', urls)
