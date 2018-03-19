@@ -154,16 +154,16 @@ def _eval_builder(field_type, elms):
 dif_reader2 = MetadataReader(
     fields={
         # Basic info
-        "Entry_ID": _eval_builder('textList', ['Entry_ID', 'text()']),
-        "Entry_Title": _eval_builder('textList', ['Entry_Title', 'text()']),
+        "Entry-ID": _eval_builder('textList', ['Entry_ID', 'text()']),
+        "Entry-title": _eval_builder('textList', ['Entry_Title', 'text()']),
 
         # Dataset citation
-        "Data_Set_Citation/Dataset_Creator": _eval_builder('textList', ['Dataset_Creator', 'text()']),
-        "Data_Set_Citation/Dataset_Title": _eval_builder('textList', ['Dataset_Title', 'text()']),
-        "Data_Set_Citation/Dataset_Release_Date": _eval_builder('textList', ['Dataset_Release_Date', 'text()']),
-        "Data_Set_Citation/Dataset_Release_Place": _eval_builder('textList', ['Dataset_Release_Place', 'text()']),
-        "Data_Set_Citation/Dataset_Publisher": _eval_builder('textList', ['Dataset_Publisher', 'text()']),
-        "Data_Set_Citation/Version": _eval_builder('textList', ['Version', 'text()']),
+        "Creator": _eval_builder('textList', ['Dataset_Creator', 'text()']),
+        "Dataset-title": _eval_builder('textList', ['Dataset_Title', 'text()']),
+        "Release-date": _eval_builder('textList', ['Dataset_Release_Date', 'text()']),
+        "Release-place": _eval_builder('textList', ['Dataset_Release_Place', 'text()']),
+        "Publisher": _eval_builder('textList', ['Dataset_Publisher', 'text()']),
+        "Version": _eval_builder('textList', ['Version', 'text()']),
 
         # Personnel
         "Personnel/Role": _eval_builder('textList', ['Personnel', 'Role', 'text()']),
@@ -182,24 +182,24 @@ dif_reader2 = MetadataReader(
         "Keyword": _eval_builder('textList', ['Keyword', 'text()']),
 
         # Termporal coverage
-        "Temporal_Coverage/Start_Date": _eval_builder('textList', ['Temporal_Coverage', 'Start_Date', 'text()']),
-        "Temporal_Coverage/Stop_Date": _eval_builder('textList', ['Temporal_Coverage', 'Stop_Date', 'text()']),
+        "Temporal-coverage, start-date": _eval_builder('textList', ['Temporal_Coverage', 'Start_Date', 'text()']),
+        "Temporal-coverage, stop-date": _eval_builder('textList', ['Temporal_Coverage', 'Stop_Date', 'text()']),
 
         # Data_Set_Progress
         "Data_Set_Progress": _eval_builder('textList', ['Data_Set_Progress', 'text()']),
 
         # Spatial_Coverage
-        "Spatial_Coverage/Southernmost_lat": _eval_builder('textList', ['Spatial_Coverage', 'Southernmost_Latitude', 'text()']),
-        "Spatial_Coverage/Northernmost_lat": _eval_builder('textList', ['Spatial_Coverage', 'Northernmost_Latitude', 'text()']),
-        "Spatial_Coverage/Westernmost_lon": _eval_builder('textList', ['Spatial_Coverage', 'Westernmost_Longitude', 'text()']),
-        "Spatial_Coverage/Easternmost_lon": _eval_builder('textList', ['Spatial_Coverage', 'Easternmost_Longitude', 'text()']),
+        "Coverage, southernmost-latitute": _eval_builder('textList', ['Spatial_Coverage', 'Southernmost_Latitude', 'text()']),
+        "Coverage, northernmost-latitute": _eval_builder('textList', ['Spatial_Coverage', 'Northernmost_Latitude', 'text()']),
+        "Coverage, westernmost-longitude": _eval_builder('textList', ['Spatial_Coverage', 'Westernmost_Longitude', 'text()']),
+        "Coverage, easternmost-longitude": _eval_builder('textList', ['Spatial_Coverage', 'Easternmost_Longitude', 'text()']),
 
         # Project
         "Project/Short_Name": _eval_builder('textList', ['Project', 'Short_Name', 'text()']),
         "Project/Long_Name": _eval_builder('textList', ['Project', 'Long_Name', 'text()']),
 
-        "Access_Constraints": _eval_builder('textList', ['Access_Constraints', 'text()']),
-        "Use_Constraints": _eval_builder('textList', ['Use_Constraints', 'text()']),
+        "Access-constraints": _eval_builder('textList', ['Access_Constraints', 'text()']),
+        "Use-constraints": _eval_builder('textList', ['Use_Constraints', 'text()']),
         "Data_Set_Language": _eval_builder('textList', ['Data_Set_Language', 'text()']),
         "Originating_Center": _eval_builder('textList', ['Originating_Center', 'text()']),
 

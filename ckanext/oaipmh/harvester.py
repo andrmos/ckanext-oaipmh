@@ -375,7 +375,7 @@ class OaipmhHarvester(HarvesterBase):
             # https://github.com/ckan/ckan/blob/master/ckan/logic/schema.py
             # TODO: Are there more fields to add?
             return {
-                'title': 'Entry_Title',
+                'title': 'Entry-title',
                 'notes': 'Summary/Abstract',
                 #  'name': '',
                 # Thredds catalog?
@@ -399,9 +399,9 @@ class OaipmhHarvester(HarvesterBase):
 
     def _extract_author(self, content):
         if self.md_format == 'dif':
-            dataset_creator = ', '.join(content['Data_Set_Citation/Dataset_Creator'])
+            dataset_creator = ', '.join(content['Creator'])
             # TODO: Remove publisher? Is not part of mapping...
-            dataset_publisher = ', '.join(content['Data_Set_Citation/Dataset_Publisher'])
+            dataset_publisher = ', '.join(content['Publisher'])
             if 'not available' not in dataset_creator.lower():
                 return dataset_creator
             elif 'not available' not in dataset_publisher.lower():
@@ -413,8 +413,8 @@ class OaipmhHarvester(HarvesterBase):
 
     def _extract_license_id(self, content):
         if self.md_format == 'dif':
-            use_constraints = ', '.join(content['Use_Constraints'])
-            access_constraints = ', '.join(content['Access_Constraints'])
+            use_constraints = ', '.join(content['Use-constraints'])
+            access_constraints = ', '.join(content['Access-constraints'])
             # TODO: Generalize in own function to check for both
             #       'Not available' and None value
             if 'not available' not in use_constraints.lower() and 'not available' not in access_constraints.lower():
@@ -428,6 +428,7 @@ class OaipmhHarvester(HarvesterBase):
 
     def _extract_tags_and_extras(self, content):
         extras = []
+        #  extras.append({'test_value': {'field1': 1, 'field2': 'heider'}})
         tags = []
         for key, value in content.iteritems():
             if key in self._get_mapping().values():
